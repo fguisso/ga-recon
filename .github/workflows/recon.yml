@@ -17,9 +17,10 @@ jobs:
         with:
           domain: owasp.org
           brute: true
+          output: hosts.txt
 
       - name: GitHub Workflow artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: amass.txt
-          path: amass.txt
+          name: hosts.txt
+          path: hosts.txt
