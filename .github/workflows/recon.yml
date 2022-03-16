@@ -15,7 +15,7 @@ jobs:
       - name: Amass - Enumeration
         uses: fguisso/amass-action@main
         with:
-          domain: owasp.org
+          domains: owasp.org
           brute: true
           output: hosts.txt
 
