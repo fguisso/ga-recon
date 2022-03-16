@@ -1,6 +1,8 @@
 name: 🔎 Recon workflow
 
 on:
+    schedule:
+        - cron: '0 0 * * 0'
     workflow_dispatch:
 
 jobs:
@@ -18,9 +20,24 @@ jobs:
           domains: owasp.org
           brute: true
           output: hosts.txt
+          
+      - name: Naabu - Port Scannner
+        uses: projectdiscovery/naabu-action@main
+        with:
+            list: hosts.txt
+            output: urls.txt
+            
+      - name: Nuclei - DAST Scan
+        uses: fguisso/nuclei-action@inputs
+        with:
+          urls: urls.txt
+          output: nuclei.txt
 
       - name: GitHub Workflow artifacts
         uses: actions/upload-artifact@v2
         with:
           name: hosts.txt
-          path: hosts.txt
+          path: |
+            hosts.txt
+            urls.txt
+            nuclei.txt
