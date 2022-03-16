@@ -1,0 +1,25 @@
+name: 🔎 Recon workflow
+
+on:
+    workflow_dispatch:
+
+jobs:
+  amass-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+
+      - name: Amass - Enumeration
+        uses: fguisso/amass-action@main
+        with:
+          domain: owasp.org
+          brute: true
+
+      - name: GitHub Workflow artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: amass.txt
+          path: amass.txt
