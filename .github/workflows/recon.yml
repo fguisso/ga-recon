@@ -28,7 +28,7 @@ jobs:
             output: urls.txt
             
       - name: Nuclei - DAST Scan
-        uses: fguisso/nuclei-action@inputs
+        uses: projectdiscovery/nuclei-action@main
         with:
           urls: urls.txt
           output: nuclei.txt
