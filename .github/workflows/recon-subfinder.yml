@@ -1,4 +1,4 @@
-name: 🔎 Recon
+name: 🔎 Recon SubFinder
 
 on:
     workflow_dispatch:
@@ -12,11 +12,10 @@ jobs:
         with:
           go-version: 1.17
 
-      - name: Amass Enum
-        uses: fguisso/amass-action@main
+      - name: SubFinder Enum
+        uses: projectdiscovery/subfinder-action@main
         with:
-          brute: true
-          domains: target.com
+          domain: target.com
           output: hosts.txt
 
       - name: 💥 Naabu - Port Scanner

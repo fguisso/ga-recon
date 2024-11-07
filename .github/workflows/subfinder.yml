@@ -1,0 +1,26 @@
+name: 🔎 SubFinder
+
+on:
+    workflow_dispatch:
+
+jobs:
+  recons:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.19
+
+      - name: SubFinder Enum
+        uses: projectdiscovery/subfinder-action@main
+        with:
+          list: frontstage/all_prod.txt
+          output: hosts.txt
+
+      - name: GitHub Workflow artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: final-recon
+          path: |
+            hosts.txt

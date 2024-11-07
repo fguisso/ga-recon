@@ -1,0 +1,13 @@
+name: Nuclei with npm
+
+on:
+    workflow_dispatch:
+
+jobs:
+  nuclei-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Nuclei with npm
+        uses: fguisso/nuclei-action@npm
+        with:
+          target: owasp.org

