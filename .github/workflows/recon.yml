@@ -24,23 +24,22 @@ jobs:
       - name: Prepare - Amass
         run: |
           awk -F ' --> ' '{
-              gsub(/\([^)]+\)/, "", $1);
-              gsub(/^[ \t]+|[ \t]+$/, "", $1);
-              if ($1 !~ /\//) print $1;
-              gsub(/\([^)]+\)/, "", $NF);
-              gsub(/^[ \t]+|[ \t]+$/, "", $NF);
-              if ($NF !~ /\//) print $NF;
-          }' hosts.txt | sort -u > hosts_tmp.txt
-          mv hosts_tmp.txt hosts.txt
+          gsub(/\([^)]+\)/, "", $1);
+          gsub(/^[ \t]+|[ \t]+$/, "", $1);
+          if ($1 !~ /\//) print $1;
+          gsub(/\([^)]+\)/, "", $NF);
+          gsub(/^[ \t]+|[ \t]+$/, "", $NF);
+          if ($NF !~ /\//) print $NF;
+          }' hosts.txt | sort -u > hosts_filtered.txt
       
       - name: Debug - Amass
         run: |
-          cat hosts.txt
+          cat hosts_filtered.txt
           
       - name: Naabu - Port Scannner
         uses: projectdiscovery/naabu-action@main
         with:
-            list: hosts.txt
+            list: hosts_filtered.txt
             output: urls.txt
       
       - name: Debug - Naabu
@@ -60,8 +59,8 @@ jobs:
       - name: GitHub Workflow artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: hosts.txt
+          name: hosts_filtered.txt
           path: |
-            hosts.txt
+            hosts_filtered.txt
             urls.txt
             nuclei.txt
