@@ -15,7 +15,7 @@ jobs:
       - name: SubFinder - DNS Enumeration
         uses: projectdiscovery/subfinder-action@main
         with:
-          domain: target.com
+          domain: ${{ vars.TARGET_DOMAIN }}
 
       - name: GitHub Workflow artifacts
         uses: actions/upload-artifact@v2

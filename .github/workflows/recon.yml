@@ -1,41 +1,66 @@
-name: 🔎 Recon
+name: 🔎 (2024) Recon - Amass + Naabu + Nuclei
 
 on:
+    # schedule:
+    #    - cron: '0 0 * * 0'
     workflow_dispatch:
 
 jobs:
-  recons:
+  recon:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
         with:
-          go-version: 1.17
+          go-version: 1.21.x
 
-      - name: Amass Enum
-        uses: fguisso/amass-action@main
+      - name: Amass - Enumeration
+        uses: afonso/amass-action@main
         with:
+          domains: ${{ vars.TARGET_DOMAIN }}
           brute: true
-          domains: target.com
           output: hosts.txt
-
-      - name: 💥 Naabu - Port Scanner
+          
+      - name: Prepare - Amass
+        run: |
+          awk -F ' --> ' '{
+          gsub(/\([^)]+\)/, "", $1);
+          gsub(/^[ \t]+|[ \t]+$/, "", $1);
+          if ($1 !~ /\//) print $1;
+          gsub(/\([^)]+\)/, "", $NF);
+          gsub(/^[ \t]+|[ \t]+$/, "", $NF);
+          if ($NF !~ /\//) print $NF;
+          }' hosts.txt | sort -u > hosts_filtered.txt
+      
+      - name: Debug - Amass
+        run: |
+          cat hosts_filtered.txt
+          
+      - name: Naabu - Port Scannner
         uses: projectdiscovery/naabu-action@main
         with:
-          list: hosts.txt
-          output: urls.txt
-
+            list: hosts_filtered.txt
+            output: urls.txt
+      
+      - name: Debug - Naabu
+        run: |
+          cat urls.txt
+          
       - name: Nuclei - DAST Scan
         uses: projectdiscovery/nuclei-action@main
         with:
           urls: urls.txt
           output: nuclei.txt
+    
+      - name: Debug - Nuclei
+        run: |
+          cat nuclei.txt
 
       - name: GitHub Workflow artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: final-recon
+          name: hosts_filtered.txt
           path: |
-            hosts.txt
+            hosts_filtered.txt
             urls.txt
             nuclei.txt
