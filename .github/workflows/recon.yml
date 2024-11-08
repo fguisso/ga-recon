@@ -24,13 +24,14 @@ jobs:
       - name: Prepare - Amass
         run: |
           awk -F ' --> ' '{
-          gsub(/\([^)]+\)/, "", $1);
-          gsub(/^[ \t]+|[ \t]+$/, "", $1);
-          if ($1 !~ /\//) print $1;
-          gsub(/\([^)]+\)/, "", $NF);
-          gsub(/^[ \t]+|[ \t]+$/, "", $NF);
-          if ($NF !~ /\//) print $NF;
-          }' hosts.txt | sort -u > hosts.txt
+              gsub(/\([^)]+\)/, "", $1);
+              gsub(/^[ \t]+|[ \t]+$/, "", $1);
+              if ($1 !~ /\//) print $1;
+              gsub(/\([^)]+\)/, "", $NF);
+              gsub(/^[ \t]+|[ \t]+$/, "", $NF);
+              if ($NF !~ /\//) print $NF;
+          }' hosts.txt | sort -u > hosts_tmp.txt
+          mv hosts_tmp.txt hosts.txt
       
       - name: Debug - Amass
         run: |
