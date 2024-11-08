@@ -30,7 +30,7 @@ jobs:
           gsub(/\([^)]+\)/, "", $NF);
           gsub(/^[ \t]+|[ \t]+$/, "", $NF);
           if ($NF !~ /\//) print $NF;
-          }' hosts.txt | sort -u
+          }' hosts.txt | sort -u > hosts.txt
       
       - name: Debug - Amass
         run: |
