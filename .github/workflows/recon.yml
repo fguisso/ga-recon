@@ -21,17 +21,29 @@ jobs:
           brute: true
           output: hosts.txt
           
+      - name: Debug - Amass
+        run: |
+          cat hosts.txt
+          
       - name: Naabu - Port Scannner
         uses: projectdiscovery/naabu-action@main
         with:
             list: hosts.txt
             output: urls.txt
-            
+      
+      - name: Debug - Naabu
+        run: |
+          cat urls.txt
+          
       - name: Nuclei - DAST Scan
         uses: projectdiscovery/nuclei-action@main
         with:
           urls: urls.txt
           output: nuclei.txt
+    
+      - name: Debug - Nuclei
+        run: |
+          cat nuclei.txt
 
       - name: GitHub Workflow artifacts
         uses: actions/upload-artifact@v2
