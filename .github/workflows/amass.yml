@@ -1,0 +1,21 @@
+name: 🔎 Amass Enum
+
+on:
+    workflow_dispatch:
+
+jobs:
+  amass-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Amass - Enumeration
+        uses: fguisso/amass-action@npm
+        with:
+          domains: target.com
+          output: hosts.txt
+          brute: true
+
+      - name: GitHub Workflow artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: final-recon
+          path: hosts.txt

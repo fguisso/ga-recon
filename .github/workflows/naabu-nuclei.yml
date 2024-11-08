@@ -1,0 +1,33 @@
+name: 🔎 Recon with naabu+nuclei
+
+on:
+    workflow_dispatch:
+
+jobs:
+  recons:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+
+      - name: 💥 Naabu - Port Scanner
+        uses: projectdiscovery/naabu-action@main
+        with:
+          flags: "-host target.com"
+          output: urls.txt
+
+      - name: Nuclei - DAST Scan
+        uses: projectdiscovery/nuclei-action@main
+        with:
+          urls: urls.txt
+          output: nuclei.txt
+
+      - name: GitHub Workflow artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: final-recon
+          path: |
+            urls.txt
+            nuclei.txt

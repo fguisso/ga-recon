@@ -1,0 +1,40 @@
+name: 🔎 Recon SubFinder
+
+on:
+    workflow_dispatch:
+
+jobs:
+  recons:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+
+      - name: SubFinder Enum
+        uses: projectdiscovery/subfinder-action@main
+        with:
+          domain: target.com
+          output: hosts.txt
+
+      - name: 💥 Naabu - Port Scanner
+        uses: projectdiscovery/naabu-action@main
+        with:
+          list: hosts.txt
+          output: urls.txt
+
+      - name: Nuclei - DAST Scan
+        uses: projectdiscovery/nuclei-action@main
+        with:
+          urls: urls.txt
+          output: nuclei.txt
+
+      - name: GitHub Workflow artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: final-recon
+          path: |
+            hosts.txt
+            urls.txt
+            nuclei.txt

@@ -1,0 +1,25 @@
+name: Nuclei - DAST Scan
+
+on:
+    workflow_dispatch:
+
+jobs:
+  nuclei-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.19
+
+      - name: Nuclei - DAST Scan
+        uses: projectdiscovery/nuclei-action@main
+        with:
+          urls: frontstage/halfxprod.txt
+          flags: -fr -exclude-id dmarc-detect,kong-detect,ssl-issuer,ssl-dns-names,http-missing-security-headers,deprecated-tls,cname-fingerprint
+
+      - name: GitHub Workflow artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: nuclei.log
+          path: nuclei.log

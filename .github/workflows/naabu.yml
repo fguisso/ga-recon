@@ -1,0 +1,24 @@
+name: 💥 Naabu - Port Scanner
+
+on:
+    workflow_dispatch:
+
+jobs:
+  naabu-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.19
+
+      - name: 💥 Naabu - Port Scanner
+        uses: projectdiscovery/naabu-action@main
+        with:
+          list: frontstage/all_prod.txt
+
+      - name: GitHub Workflow artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: naabu.log
+          path: naabu.log

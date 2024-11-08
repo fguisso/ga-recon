@@ -1,0 +1,24 @@
+name: 🔎 SubFinder - DNS Enumeration
+
+on:
+    workflow_dispatch:
+
+jobs:
+  subfinder-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+
+      - name: SubFinder - DNS Enumeration
+        uses: projectdiscovery/subfinder-action@main
+        with:
+          domain: ${{ vars.TARGET_DOMAIN }}
+
+      - name: GitHub Workflow artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: subfinder.log
+          path: subfinder.log
